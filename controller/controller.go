@@ -28,3 +28,12 @@ func Create(x, y int) (Controller, error) {
 		memorials: make(map[int]int),
 	}, nil
 }
+
+func (c *Controller) ConnectRobot(x, y int, orientation string) error {
+	robot, err := r.Create(x, y, orientation)
+	if err != nil {
+		return err
+	}
+	c.robots = append(c.robots, robot)
+	return fmt.Errorf("%v", len(c.robots))
+}
