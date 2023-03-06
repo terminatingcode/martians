@@ -10,6 +10,27 @@ type Robot struct {
 	connected   bool
 }
 
+func Create(x, y int, orientation string) (Robot, error) {
+	o := orientate(orientation)
+	if o == -1 {
+		return Robot{}, fmt.Errorf("invalid input %s", orientation)
+	}
+	return Robot{
+		coordinates: [2]int{x, y},
+		orientation: o,
+		connected:   true,
+	}, nil
+}
+
+func orientate(orientation string) int {
+	for i, o := range orientations {
+		if o == orientation {
+			return i
+		}
+	}
+	return -1
+}
+
 func (r *Robot) Rotate(direction string) error {
 	switch direction {
 	case "L":
