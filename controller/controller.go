@@ -37,3 +37,24 @@ func (c *Controller) ConnectRobot(x, y int, orientation string) (r.Robot, error)
 	c.robots = append(c.robots, robot)
 	return robot, nil
 }
+
+func (c Controller) DirectRobot(robot *r.Robot, input string) error {
+	switch input {
+	case "L":
+		fallthrough
+	case "R":
+		robot.Rotate(input)
+		return nil
+	case "F":
+		if robot.IsConnected() {
+			robot.Forward()
+			coordinates := robot.Location()
+			if coordinates[0] > c.x || coordinates[0] < 0 || coordinates[1] > c.y || coordinates[1] < 0 {
+				robot.Disconnect()
+			}
+		}
+		return nil
+	default:
+		return fmt.Errorf("invalid input %s", input)
+	}
+}

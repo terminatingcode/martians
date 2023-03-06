@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 	"testing"
+
+	r "github.com/terminatingcode/martians/robot"
 )
 
 func TestCreate(t *testing.T) {
@@ -51,6 +53,35 @@ func TestConnectRobot(t *testing.T) {
 		}
 		if len(controller.robots) != c.want {
 			t.Errorf("ConnectRobot(%d, %d, %s) resulted in robots length %d", c.x, c.y, c.orientation, len(controller.robots))
+		}
+	}
+}
+
+func TestDirectRobot(t *testing.T) {
+	robot, _ := r.Create(0, 0, "N")
+	cases := []struct {
+		robot r.Robot
+		input string
+		want  string
+		err   error
+	}{
+		{robot, "R", "0 0 E", nil},
+		{robot, "L", "0 0 N", nil},
+		{robot, "F", "0 1 N", nil},
+		{robot, "T", "0 1 N", fmt.Errorf("invalid input T")},
+		{robot, "F", "0 2 N LOST", nil},
+	}
+
+	for _, c := range cases {
+		controller, _ := Create(1, 1)
+		err := controller.DirectRobot(&robot, c.input)
+		if err != nil {
+			if err.Error() != c.err.Error() {
+				t.Errorf("DirectRobot() recieved error %s wanted %s", err.Error(), c.err.Error())
+			}
+		}
+		if robot.ToString() != c.want {
+			t.Errorf("DirectctRobot() resulted in robots %s wanted %s", robot.ToString(), c.want)
 		}
 	}
 }
