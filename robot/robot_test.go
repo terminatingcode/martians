@@ -64,3 +64,21 @@ func TestConnected(t *testing.T) {
 		}
 	}
 }
+
+func TestToString(t *testing.T) {
+	cases := []struct {
+		robot Robot
+		want  string
+	}{
+		{Robot{connected: true}, "0 0 N"},
+		{Robot{coordinates: [2]int{5, 10}, orientation: 1}, "5 10 E LOST"},
+		{Robot{coordinates: [2]int{-1, 0}, orientation: 2}, "-1 0 S LOST"},
+		{Robot{coordinates: [2]int{0, 0}, orientation: 3, connected: true}, "0 0 W"},
+	}
+	for _, c := range cases {
+		got := c.robot.ToString()
+		if got != c.want {
+			t.Errorf("Robot[%v].ToString() == %s, want %s", c.robot, got, c.want)
+		}
+	}
+}

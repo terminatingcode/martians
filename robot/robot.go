@@ -44,3 +44,11 @@ func (r Robot) IsConnected() bool {
 func (r *Robot) Disconnect() {
 	r.connected = false
 }
+
+func (r Robot) ToString() string {
+	connectedString := ""
+	if !r.connected {
+		connectedString = " LOST"
+	}
+	return fmt.Sprintf("%d %d %s%s", r.coordinates[0], r.coordinates[1], orientations[r.orientation], connectedString)
+}
