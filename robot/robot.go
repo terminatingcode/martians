@@ -43,7 +43,7 @@ func (r *Robot) Rotate(direction string) error {
 	return nil
 }
 
-func (r *Robot) Forward(x, y int) {
+func (r *Robot) Forward(x, y int, hasWarning bool) {
 	if r.connected {
 		switch r.orientation {
 		case 0:
@@ -67,7 +67,9 @@ func (r *Robot) Forward(x, y int) {
 				return
 			}
 		}
-		r.connected = false
+		if !hasWarning {
+			r.connected = false
+		}
 	}
 }
 

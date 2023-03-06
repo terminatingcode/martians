@@ -49,12 +49,7 @@ func (c *Controller) DirectRobot(robot *r.Robot, input string) error {
 	case "F":
 		if robot.IsConnected() {
 			coordinates := robot.Location()
-			if c.isMemorial(coordinates[0], coordinates[1]) {
-				fmt.Println("is memorial")
-				return nil
-			}
-
-			robot.Forward(c.x, c.y)
+			robot.Forward(c.x, c.y, c.isMemorial(coordinates[0], coordinates[1]))
 			if !robot.IsConnected() {
 				c.memorials[coordinates[0]] = coordinates[1]
 				return nil

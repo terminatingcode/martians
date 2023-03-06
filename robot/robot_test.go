@@ -62,20 +62,22 @@ func TestRotate(t *testing.T) {
 
 func TestForward(t *testing.T) {
 	cases := []struct {
-		robot Robot
-		want  Robot
+		robot      Robot
+		hasWarning bool
+		want       Robot
 	}{
-		{Robot{orientation: 0, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 0, coordinates: [2]int{0, 1}, connected: true}},
-		{Robot{orientation: 1, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 1, coordinates: [2]int{1, 0}, connected: true}},
-		{Robot{orientation: 2, coordinates: [2]int{1, 1}, connected: true}, Robot{orientation: 2, coordinates: [2]int{1, 0}, connected: true}},
-		{Robot{orientation: 3, coordinates: [2]int{1, 1}, connected: true}, Robot{orientation: 3, coordinates: [2]int{0, 1}, connected: true}},
-		{Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: true}, Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: false}},
-		{Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: true}, Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: false}},
-		{Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: false}},
-		{Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: false}},
+		{Robot{orientation: 0, coordinates: [2]int{0, 0}, connected: true}, false, Robot{orientation: 0, coordinates: [2]int{0, 1}, connected: true}},
+		{Robot{orientation: 1, coordinates: [2]int{0, 0}, connected: true}, false, Robot{orientation: 1, coordinates: [2]int{1, 0}, connected: true}},
+		{Robot{orientation: 2, coordinates: [2]int{1, 1}, connected: true}, false, Robot{orientation: 2, coordinates: [2]int{1, 0}, connected: true}},
+		{Robot{orientation: 3, coordinates: [2]int{1, 1}, connected: true}, false, Robot{orientation: 3, coordinates: [2]int{0, 1}, connected: true}},
+		{Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: true}, false, Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: false}},
+		{Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: true}, false, Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: false}},
+		{Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: true}, false, Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: false}},
+		{Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: true}, false, Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: false}},
+		{Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: true}, true, Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: true}},
 	}
 	for _, c := range cases {
-		c.robot.Forward(5, 5)
+		c.robot.Forward(5, 5, c.hasWarning)
 		if c.robot != c.want {
 			t.Errorf("Robot[%v].Forward() want %v", c.robot, c.want)
 		}
