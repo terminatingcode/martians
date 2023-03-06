@@ -63,32 +63,21 @@ func TestRotate(t *testing.T) {
 func TestForward(t *testing.T) {
 	cases := []struct {
 		robot Robot
-		want  [2]int
+		want  Robot
 	}{
-		{Robot{orientation: 0, coordinates: [2]int{0, 0}, connected: true}, [2]int{0, 1}},
-		{Robot{orientation: 1, coordinates: [2]int{0, 0}, connected: true}, [2]int{1, 0}},
-		{Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: true}, [2]int{0, -1}},
-		{Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: true}, [2]int{-1, 0}},
+		{Robot{orientation: 0, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 0, coordinates: [2]int{0, 1}, connected: true}},
+		{Robot{orientation: 1, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 1, coordinates: [2]int{1, 0}, connected: true}},
+		{Robot{orientation: 2, coordinates: [2]int{1, 1}, connected: true}, Robot{orientation: 2, coordinates: [2]int{1, 0}, connected: true}},
+		{Robot{orientation: 3, coordinates: [2]int{1, 1}, connected: true}, Robot{orientation: 3, coordinates: [2]int{0, 1}, connected: true}},
+		{Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: true}, Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: false}},
+		{Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: true}, Robot{orientation: 1, coordinates: [2]int{5, 5}, connected: false}},
+		{Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 2, coordinates: [2]int{0, 0}, connected: false}},
+		{Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: true}, Robot{orientation: 3, coordinates: [2]int{0, 0}, connected: false}},
 	}
 	for _, c := range cases {
-		c.robot.Forward()
-		if c.robot.coordinates != c.want {
-			t.Errorf("Robot[%v].Forward() == %d, want %d", c.robot, c.robot.coordinates, c.want)
-		}
-	}
-}
-
-func TestConnected(t *testing.T) {
-	cases := []struct {
-		robot Robot
-		want  bool
-	}{
-		{Robot{connected: true}, false},
-	}
-	for _, c := range cases {
-		c.robot.Disconnect()
-		if c.robot.connected != c.want {
-			t.Errorf("Robot[%v].Disconnect() == %t, want %t", c.robot, c.robot.connected, c.want)
+		c.robot.Forward(5, 5)
+		if c.robot != c.want {
+			t.Errorf("Robot[%v].Forward() want %v", c.robot, c.want)
 		}
 	}
 }

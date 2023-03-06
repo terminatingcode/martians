@@ -59,29 +59,35 @@ func TestConnectRobot(t *testing.T) {
 
 func TestDirectRobot(t *testing.T) {
 	robot, _ := r.Create(0, 0, "N")
+	robot2, _ := r.Create(0, 1, "N")
 	cases := []struct {
-		robot r.Robot
-		input string
-		want  string
-		err   error
+		robot       *r.Robot
+		input       string
+		want        string
+		memorialLen int
+		err         error
 	}{
-		{robot, "R", "0 0 E", nil},
-		{robot, "L", "0 0 N", nil},
-		{robot, "F", "0 1 N", nil},
-		{robot, "T", "0 1 N", fmt.Errorf("invalid input T")},
-		{robot, "F", "0 2 N LOST", nil},
+		{&robot, "R", "0 0 E", 0, nil},
+		{&robot, "L", "0 0 N", 0, nil},
+		{&robot, "F", "0 1 N", 0, nil},
+		{&robot, "T", "0 1 N", 0, fmt.Errorf("invalid input T")},
+		{&robot, "F", "0 1 N LOST", 1, nil},
+		{&robot2, "F", "0 1 N", 1, nil},
 	}
 
-	for _, c := range cases {
-		controller, _ := Create(1, 1)
-		err := controller.DirectRobot(&robot, c.input)
+	controller, _ := Create(1, 1)
+	for i, c := range cases {
+		err := controller.DirectRobot(c.robot, c.input)
 		if err != nil {
-			if err.Error() != c.err.Error() {
+			if c.err != nil && err.Error() != c.err.Error() {
 				t.Errorf("DirectRobot() recieved error %s wanted %s", err.Error(), c.err.Error())
 			}
 		}
-		if robot.ToString() != c.want {
-			t.Errorf("DirectctRobot() resulted in robots %s wanted %s", robot.ToString(), c.want)
+		if c.robot.ToString() != c.want {
+			t.Errorf("[%d] DirectRobot() resulted in robot %s wanted %s", i, c.robot.ToString(), c.want)
+		}
+		if len(controller.memorials) != c.memorialLen {
+			t.Errorf("[%d] DirectRobot() resulted in memorials %d wanted %d", i, len(controller.memorials), c.memorialLen)
 		}
 	}
 }

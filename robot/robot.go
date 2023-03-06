@@ -43,18 +43,31 @@ func (r *Robot) Rotate(direction string) error {
 	return nil
 }
 
-func (r *Robot) Forward() {
+func (r *Robot) Forward(x, y int) {
 	if r.connected {
 		switch r.orientation {
 		case 0:
-			r.coordinates[1] += 1
+			if r.coordinates[1]+1 <= y {
+				r.coordinates[1] += 1
+				return
+			}
 		case 1:
-			r.coordinates[0] += 1
+			if r.coordinates[0]+1 <= x {
+				r.coordinates[0] += 1
+				return
+			}
 		case 2:
-			r.coordinates[1] -= 1
+			if r.coordinates[1]-1 >= 0 {
+				r.coordinates[1] -= 1
+				return
+			}
 		case 3:
-			r.coordinates[0] -= 1
+			if r.coordinates[0]-1 >= 0 {
+				r.coordinates[0] -= 1
+				return
+			}
 		}
+		r.connected = false
 	}
 }
 
@@ -62,8 +75,8 @@ func (r Robot) IsConnected() bool {
 	return r.connected
 }
 
-func (r *Robot) Disconnect() {
-	r.connected = false
+func (r Robot) Location() [2]int {
+	return r.coordinates
 }
 
 func (r Robot) ToString() string {
