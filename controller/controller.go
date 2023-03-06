@@ -29,11 +29,11 @@ func Create(x, y int) (Controller, error) {
 	}, nil
 }
 
-func (c *Controller) ConnectRobot(x, y int, orientation string) error {
+func (c *Controller) ConnectRobot(x, y int, orientation string) (r.Robot, error) {
 	robot, err := r.Create(x, y, orientation)
 	if err != nil {
-		return err
+		return robot, err
 	}
 	c.robots = append(c.robots, robot)
-	return fmt.Errorf("%v", len(c.robots))
+	return robot, nil
 }

@@ -44,8 +44,8 @@ func TestConnectRobot(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		controller, err := Create(50, 50)
-		controller.ConnectRobot(c.x, c.y, c.orientation)
+		controller, _ := Create(50, 50)
+		_, err := controller.ConnectRobot(c.x, c.y, c.orientation)
 		if err != nil && !c.wantErr {
 			t.Errorf("ConnectRobot(%d, %d, %s) unexpected error %s", c.x, c.y, c.orientation, err.Error())
 		}
